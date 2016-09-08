@@ -2,6 +2,7 @@
 #define CLASSES_H
 
 #include <QObject>
+#include <QSharedPointer>
 
 class MyBaseClass: public QObject
 {
@@ -16,25 +17,25 @@ class MyDerivedClass: public MyBaseClass
 public:
     MyDerivedClass() : MyBaseClass() { }
     virtual ~MyDerivedClass() {}
-    QString text() { return m_text; }
-    void setText(const QString &text) { m_text = text; }
-private:
-    QString m_text;
-
 };
 
 class MyObject: public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(MyDerivedClass* myProp READ myProp WRITE setMyProp)
+    Q_PROPERTY(QSharedPointer<MyDerivedClass> myQSPProp READ myQSPProp WRITE setMyQSPProp)
+    Q_PROPERTY(MyDerivedClass* myPtrProp READ myPtrProp WRITE setMyPtrProp)
 public:
     MyObject() : QObject() { }
     virtual ~MyObject() {}
-    MyDerivedClass* myProp() { return m_myProp; }
-    void setMyProp(MyDerivedClass* myProp) { m_myProp = myProp; }
+
+    QSharedPointer<MyDerivedClass> myQSPProp() { return m_myQSPProp; }
+    void setMyQSPProp(QSharedPointer<MyDerivedClass> myQSPProp) { m_myQSPProp = myQSPProp; }
+    MyDerivedClass* myPtrProp() { return m_myPtrProp; }
+    void setMyPtrProp(MyDerivedClass* myPtrProp) { m_myPtrProp = myPtrProp; }
 
 private:
-    MyDerivedClass* m_myProp;
+    QSharedPointer<MyDerivedClass> m_myQSPProp;
+    MyDerivedClass* m_myPtrProp;
 };
 
 

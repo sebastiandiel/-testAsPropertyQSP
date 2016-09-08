@@ -1,32 +1,38 @@
-#include <QCoreApplication>
 #include <QDebug>
 #include <QObject>
 #include <QMetaProperty>
 #include <QMetaObject>
-#include <QSharedPointer>
 #include "classes.h"
 
 
 int main(int argc, char *argv[])
 {
+    Q_UNUSED(argc)
+    Q_UNUSED(argv)
+
     auto myObject = QSharedPointer<MyObject>(new MyObject());
+
     auto value1 = QSharedPointer<MyDerivedClass>(new MyDerivedClass());
-    value1->setText("Wert1");
     auto value2 = QSharedPointer<MyDerivedClass>(new MyDerivedClass());
-    value2->setText("Wert2");
+    auto value3 = new MyDerivedClass();
+    auto value4 = new MyDerivedClass();
 
-    QVariant var1;
-    QVariant var2;
+    QVariant varQSPDerived;
+    QVariant varQSPBase;
 
-    var1.setValue<QSharedPointer<MyDerivedClass>>(value1);
-    var2.setValue<QSharedPointer<MyBaseClass>>(value2);
+    QVariant varPtrDerived;
+    QVariant varPtrBase;
 
-    qDebug()<<myObject->metaObject()->property(1).write(myObject.data(),var1);
-//    qDebug()<<myObject->myProp()->text();
-    qDebug()<<myObject->metaObject()->property(1).write(myObject.data(),var2);
-//    qDebug()<<myObject->myProp()->text();
+    varQSPDerived.setValue<QSharedPointer<MyDerivedClass>>(value1);
+    varQSPBase.setValue<QSharedPointer<MyBaseClass>>(value2);
 
-    QCoreApplication a(argc, argv);
+    varPtrDerived.setValue<MyDerivedClass*>(value3);
+    varPtrBase.setValue<MyBaseClass*>(value4);
 
-    return a.exec();
+    qDebug()<<"With QSharedPointer:";
+    qDebug()<<"Derived: "<<myObject->metaObject()->property(1).write(myObject.data(),varQSPDerived);
+    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(1).write(myObject.data(),varQSPBase);
+    qDebug()<<"With normal pointer:";
+    qDebug()<<"Derived: "<<myObject->metaObject()->property(2).write(myObject.data(),varPtrDerived);
+    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(2).write(myObject.data(),varPtrBase);
 }
