@@ -35,4 +35,11 @@ int main(int argc, char *argv[])
     qDebug()<<"With normal pointer:";
     qDebug()<<"Derived: "<<myObject->metaObject()->property(2).write(myObject.data(),varPtrDerived);
     qDebug()<<"Base Cl: "<<myObject->metaObject()->property(2).write(myObject.data(),varPtrBase);
+    qDebug()<<"Writing QSP to normal (wrong thing to do!):";
+    qDebug()<<"Derived: "<<myObject->metaObject()->property(2).write(myObject.data(),varQSPDerived);
+    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(2).write(myObject.data(),varQSPBase);
+//    qDebug()<<"Writing normal to QSP (still wrong thing to do!):";
+//    qDebug()<<"Derived: "<<myObject->metaObject()->property(1).write(myObject.data(),varPtrDerived);
+//    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(1).write(myObject.data(),varPtrBase);
+
 }
