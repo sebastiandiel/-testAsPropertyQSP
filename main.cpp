@@ -12,10 +12,10 @@ int main(int argc, char *argv[])
 
     auto myObject = QSharedPointer<MyObject>(new MyObject());
 
-    auto value1 = QSharedPointer<MyDerivedClass>(new MyDerivedClass());
-    auto value2 = QSharedPointer<MyDerivedClass>(new MyDerivedClass());
-    auto value3 = new MyDerivedClass();
-    auto value4 = new MyDerivedClass();
+    auto value1QSP = QSharedPointer<MyDerivedClass>(new MyDerivedClass());
+    auto value2QSP = QSharedPointer<MyDerivedClass>(new MyDerivedClass());
+    auto value3PTR = new MyDerivedClass();
+    auto value4PTR = new MyDerivedClass();
 
     QVariant varQSPDerived;
     QVariant varQSPBase;
@@ -23,23 +23,26 @@ int main(int argc, char *argv[])
     QVariant varPtrDerived;
     QVariant varPtrBase;
 
-    varQSPDerived.setValue<QSharedPointer<MyDerivedClass>>(value1);
-    varQSPBase.setValue<QSharedPointer<MyBaseClass>>(value2);
+    varQSPDerived.setValue<QSharedPointer<MyDerivedClass>>(value1QSP);
+    varQSPBase.setValue<QSharedPointer<MyBaseClass>>(value2QSP);
 
-    varPtrDerived.setValue<MyDerivedClass*>(value3);
-    varPtrBase.setValue<MyBaseClass*>(value4);
+    varPtrDerived.setValue<MyDerivedClass*>(value3PTR);
+    varPtrBase.setValue<MyBaseClass*>(value4PTR);
 
-    qDebug()<<"With QSharedPointer:";
+    qDebug()<<"Writing QSharedPointer:";
     qDebug()<<"Derived: "<<myObject->metaObject()->property(1).write(myObject.data(),varQSPDerived);
-    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(1).write(myObject.data(),varQSPBase);
-    qDebug()<<"With normal pointer:";
+    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(1).write(myObject.data(),varQSPBase)<<" <-- SHOULD return true and just work!";
+
+    qDebug()<<"Writing normal pointer:";
     qDebug()<<"Derived: "<<myObject->metaObject()->property(2).write(myObject.data(),varPtrDerived);
     qDebug()<<"Base Cl: "<<myObject->metaObject()->property(2).write(myObject.data(),varPtrBase);
-    qDebug()<<"Writing QSP to normal (wrong thing to do!):";
+
+    qDebug()<<"Writing QSP to normal (wrong usage!):";
     qDebug()<<"Derived: "<<myObject->metaObject()->property(2).write(myObject.data(),varQSPDerived);
     qDebug()<<"Base Cl: "<<myObject->metaObject()->property(2).write(myObject.data(),varQSPBase);
-//    qDebug()<<"Writing normal to QSP (still wrong thing to do!):";
-//    qDebug()<<"Derived: "<<myObject->metaObject()->property(1).write(myObject.data(),varPtrDerived);
-//    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(1).write(myObject.data(),varPtrBase);
 
+    qDebug()<<"Writing normal to QSP (also wrong)";
+    qDebug()<<"!! --> This crashes in 5.5.1, returns false in 5.7! <-- !!";
+    qDebug()<<"Derived: "<<myObject->metaObject()->property(1).write(myObject.data(),varPtrDerived);
+    qDebug()<<"Base Cl: "<<myObject->metaObject()->property(1).write(myObject.data(),varPtrBase);
 }

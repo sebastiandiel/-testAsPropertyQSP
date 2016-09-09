@@ -38,7 +38,6 @@ private:
     MyDerivedClass* m_myPtrProp;
 };
 
-
 #endif // CLASSES_H
 
 
