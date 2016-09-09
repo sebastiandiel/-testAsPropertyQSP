@@ -15,8 +15,11 @@ class MyDerivedClass: public MyBaseClass
 {
     Q_OBJECT
 public:
-    MyDerivedClass() : MyBaseClass() { }
+    MyDerivedClass(int value) : MyBaseClass() { m_value = value; }
     virtual ~MyDerivedClass() {}
+    int value() { return m_value;}
+private:
+    int m_value;
 };
 
 class MyObject: public QObject
